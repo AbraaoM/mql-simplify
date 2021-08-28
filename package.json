@@ -1,5 +1,5 @@
 {
-  "name": "@homma.tech/Simplify",
+  "name": "mql-simplify",
   "version": "1.0.0",
   "description": "MQL5 library that was born to simplify",
   "main": "index.js",
