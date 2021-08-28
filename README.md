@@ -5,12 +5,34 @@
 # MQL5Simplify
 A collection of classes to simplify common mql 5 implementations to many different uses.
 
-## How Use
-Clone this repository on your Metatrader Include folder.
+## Instalation
+
+### Initialize npm directory
+
+Inside your mql project directory run the follow command:
+```bash
+npm init
+```
+
+### Add compile script on **package.json**
+
+```json
+  "scripts": {
+    "compile": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./node_modules/mql-simplify/compile.ps1"
+  },
+```
+
+### Install package from npm
+
+```bash
+npm install mql-simplify --save
+```
+
+
 
 ## Example of usage:
 ```c++
-#include <MQL5Simplify/Graphic.mqh>
+#include "node_modules/mql-simplify/Graphic.mqh"
 
 CHorizontalLine exampleLine;
 
