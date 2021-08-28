@@ -2,7 +2,7 @@
   <img src="https://media.giphy.com/media/IHnROpQICe4kE/giphy.gif">
 </p>
 
-# MQL5Simplify
+# MQL Simplify
 A collection of classes to simplify common mql 5 implementations to many different uses.
 
 ## Instalation
