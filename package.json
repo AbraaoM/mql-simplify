@@ -7,7 +7,9 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "compile": "@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ./compile.ps1"
+
   },
   "repository": {
     "type": "git",
