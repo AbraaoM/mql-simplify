@@ -1,0 +1,23 @@
+{
+  "name": "@homma.tech/Simplify",
+  "version": "1.0.0",
+  "description": "MQL5 library that was born to simplify",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HommaTech/MQL5Simplify.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HommaTech/MQL5Simplify/issues"
+  },
+  "homepage": "https://github.com/HommaTech/MQL5Simplify#readme"
+}
