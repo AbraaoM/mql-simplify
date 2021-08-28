@@ -7,7 +7,7 @@
 #property link      "https://www.homma.tech"
 
 #include <MovingAverages.mqh>
-#include <Simplify/NewTypes.mqh>
+#include "NewTypes.mqh"
 
 class CMath {
  private:
