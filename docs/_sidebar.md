@@ -1,3 +1,4 @@
 - [Utils](Utils.md)
 - [Graphic](Graphic.md)
 - [InputCheck](InputCheck.md)
+- [Limitations](Limitations.md)
