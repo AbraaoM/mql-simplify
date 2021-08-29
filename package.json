@@ -1,6 +1,6 @@
 {
   "name": "mql-simplify",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "MQL5 library that was born to simplify",
   "main": "index.js",
   "directories": {
@@ -13,13 +13,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/HommaTech/MQL5Simplify.git"
+    "url": "git+https://github.com/HommaTech/mql-simplify.git"
   },
-  "keywords": [],
+  "keywords": ["mql5", "mql", "metatrader"],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/HommaTech/MQL5Simplify/issues"
+    "url": "https://github.com/HommaTech/mql-simplify/issues"
   },
-  "homepage": "https://github.com/HommaTech/MQL5Simplify#readme"
+  "homepage": "simplify.homma.tech"
 }
