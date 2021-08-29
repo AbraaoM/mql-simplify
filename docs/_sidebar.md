@@ -3,3 +3,4 @@
 - [InputCheck](InputCheck.md)
 - [Limitations](Limitations.md)
 - [Math](Math.md)
+- [NewTypes](NewTypes.md)
