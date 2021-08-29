@@ -5,4 +5,5 @@
 - [Math](Math.md)
 - [SendOrders](SendOrders.md)
 - [Storage](Storage.md)
+- [SymbolInfo](SymbolInfo.md)
 - [NewTypes](NewTypes.md)
