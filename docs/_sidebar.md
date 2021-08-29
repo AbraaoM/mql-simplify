@@ -2,3 +2,4 @@
 - [Graphic](Graphic.md)
 - [InputCheck](InputCheck.md)
 - [Limitations](Limitations.md)
+- [Math](Math.md)
