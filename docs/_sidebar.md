@@ -4,4 +4,5 @@
 - [Limitations](Limitations.md)
 - [Math](Math.md)
 - [SendOrders](SendOrders.md)
+- [Storage](Storage.md)
 - [NewTypes](NewTypes.md)
