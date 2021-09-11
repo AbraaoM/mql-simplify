@@ -43,3 +43,11 @@ enum PRICE_TYPE {
   CLOSE   //Fechamento
 };
 ```
+
+```c++
+enum BUY_SELL_TYPE {
+  BUY_ON_BID_SELL_ON_ASK, //Compra no BID e venda no ASK
+  BUY_ON_ASK_SELL_ON_BID  //Compra no ASK e venda no BID
+};
+
+```

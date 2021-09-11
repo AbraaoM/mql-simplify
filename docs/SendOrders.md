@@ -17,6 +17,7 @@ Initialize basic information it will be used to open orders on different ways.
 - **double** so_volume = 0
 - **double** so_takeProfit = 0
 - **double** so_stopLoss = 0
+- **BUY_SELL_TYPE** so_buySellType = BUY_ON_ASK_SELL_ON_BID
 
 ## MarketOrderPoints
 
