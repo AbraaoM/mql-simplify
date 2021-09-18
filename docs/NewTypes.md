@@ -6,7 +6,8 @@ Centralize new types used by MQL Simplify library.
 enum TRADE_TYPE {
   SELL = 0,       //Venda
   BUY = 1,        //Compra
-  NOTHING = 2     //Nenhum
+  NOTHING = 2,    //Nenhum
+  INDIFFERENT = 3 //Indiferente
 };
 ```
 
