@@ -59,6 +59,7 @@ Detects if defined profit limit is reached in defined time interval.
 - **double** profitMax_PR 
 - **datetime** initDate_PR 
 - **datetime** finishDate_PR
+- **string** symbol_PR = NULL
 
 **Return**
 
@@ -77,6 +78,7 @@ Detects if defined loss limit is reached in defined time interval.
 - **double** lossMax_LR
 - **datetime** initDate 
 - **datetime** finishDate
+- **string** symbol_LR = NULL
 
 **Return**
 
