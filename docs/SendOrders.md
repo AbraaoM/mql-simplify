@@ -57,3 +57,20 @@ Put limit orders by price.
 - **bool&** m_requirements[]
 - **TRADE_TYPE** m_tradeType
 - **double** so_price
+
+## RevertPosition
+
+reverses the sense of an open position, buy to sell or sell to buy.
+
+**Parameters**
+
+- **bool&** m_buyRequirements[]
+- **bool&** m_sellRequirements[]
+- **ulong** m_ticket
+- **ENUM_OPERATIONAL_TYPE** m_operationType = TYPE_POINTS
+
+**Return**
+
+- **bool** -
+  - true: sucess, position reverted
+  - false: Houston, we have a problem!

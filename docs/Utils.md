@@ -301,3 +301,17 @@ Shift all elemnts of an array.
 **Return**
 
 * **void**
+
+## BooleanArray
+
+Scroll through an array of boolean elements and return true if all elements are true.
+
+**Parameter**
+
+* **bool&** ut_array[] - Array of booleans to evaluate
+
+**Return**
+
+* **bool** -
+  * true: array are full true
+  * false: array has at least one false value

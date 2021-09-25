@@ -52,3 +52,10 @@ enum BUY_SELL_TYPE {
 };
 
 ```
+
+```c++
+enum ENUM_OPERATIONAL_TYPE {
+  TYPE_PRICE,
+  TYPE_POINTS
+};
+```
