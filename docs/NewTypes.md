@@ -21,7 +21,11 @@ enum BINARY_OPTIONS {
 ```c++
 enum OPERATION_OPTIONS {
   STOP_ORDER,     //Ordem Stop
-  MARKET_ORDER    //Ordem a Mercado
+  MARKET_ORDER,   //Ordem a Mercado
+  BUY_ON_ASK,     //Compra no ask
+  BUY_ON_BID,     //Compra no bid
+  SELL_ON_ASK,    //Venda no ask
+  SELL_ON_BID     //Venda no Bid
 };
 ```
 
