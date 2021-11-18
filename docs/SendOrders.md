@@ -17,9 +17,8 @@ Initialize basic information it will be used to open orders on different ways.
 - **double** so_volume = 0
 - **double** so_takeProfit = 0
 - **double** so_stopLoss = 0
-- **BUY_SELL_TYPE** so_buySellType = BUY_ON_ASK_SELL_ON_BID
 
-## MarketOrderPoints
+## AtMarketPoints
 
 Open orders at market by points.
 
@@ -28,7 +27,7 @@ Open orders at market by points.
 - **bool&** m_requirements[]
 - **TRADE_TYPE** m_tradeType
 
-## MarketOrderPrice
+## AtMarketPrice
 
 Open orders at market by price.
 
@@ -60,7 +59,7 @@ Put limit orders by price.
 
 ## RevertPosition
 
-reverses the sense of an open position, buy to sell or sell to buy.
+Reverses the sense of an open position, buy to sell or sell to buy.
 
 **Parameters**
 
@@ -74,3 +73,21 @@ reverses the sense of an open position, buy to sell or sell to buy.
 - **bool** -
   - true: sucess, position reverted
   - false: Houston, we have a problem!
+
+## OnBidPoints
+
+Open a order on bid, can be a buy or sell.
+
+**Parameters**
+
+- **bool&** m_requirements[]
+- **TRADE_TYPE** m_tradeType
+
+## OnAskPoints
+
+Open a order on ask, can be a buy or sell.
+
+**Parameters**
+
+- **bool&** m_requirements[]
+- **TRADE_TYPE** m_tradeType
