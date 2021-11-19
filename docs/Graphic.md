@@ -208,6 +208,13 @@ Return value of the variable active.
 
 Get the value of the edit that can be a input changed by the user. 
 
+### SetValue
+
+Set the value of the edit based on new text on parameters. 
+
+**Parameters**
+- **string** newText
+
 ### Destroy
 
 Turn active state to false, but some information was mantained on class.
