@@ -305,6 +305,21 @@ Turn active state to false, but some information was mantained on class.
 Destroy button object, but the class still exists. 
 Don't forget delete class to avoid memory leak.
 
+## Dropdown
+Class to control a dropdown, this class don't implements a dropdown 
+controller button, just renderize an organized array of buttons 
+passed as reference to contructor. 
+
+### Constructor
+Receive an array of buttons and copy this buttons to a internal array to be accessed
+by other internal methods who list and hide dropdown elements. 
+**Parameters**
+- **CButton&** items[] 
+
+### Open
+Draw a list of buttons on chart based on array of button received on contructor.
+### Close
+Destroy all button on screen closing the dropdown menu.
 
 
 
