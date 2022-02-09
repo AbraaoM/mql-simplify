@@ -47,9 +47,9 @@ Put stop orders by price.
 - **TRADE_TYPE** m_tradeType
 - **double** so_price
 
-## LimitOrderPrice
+## LimitOrderPoints
 
-Put limit orders by price.
+Put limit orders by points.
 
 **Parameters**
 
