@@ -1,6 +1,6 @@
 {
   "name": "mql-simplify",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "MQL5 library that was born to simplify",
   "main": "index.js",
   "directories": {
