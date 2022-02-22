@@ -123,7 +123,7 @@ Create a label object and plot on graph.
 - **int** fontSize = DEFAULT_FONT_SIZE
 - **color** fontColor = FONT_COLOR
 - **ENUM_ANCHOR_POINT** anchor = ANCHOR_LEFT_UPPER
-- **ENUM_BASE_CORNER** corner = CORNER_LEFT_UPPER
+- **ENUM_BASE_CORNER** referenceCorner = CORNER_LEFT_UPPER 
 
 **Return**
 - **string** - Name of object
@@ -195,6 +195,7 @@ Variable active si defined as true.
 - **color** fontColor = FONT_COLOR,
 - **color** bgColor = SECONDARY_COLOR,
 - **ENUM_ALIGN_MODE** align = ALIGN_CENTER
+- **ENUM_BASE_CORNER** referenceCorner = CORNER_LEFT_UPPER 
 
 **Return**
 
@@ -246,7 +247,8 @@ Can construct a button just changing active to false.
 - **color** fontColor = FONT_COLOR,
 - **color** backgroundColor = SECONDARY_COLOR,
 - **color** borderColor = SECONDARY_COLOR,
-- **color** hoverColor = SECONDARY_COLOR
+- **color** hoverColor = SECONDARY_COLOR,
+- **ENUM_ANCHOR_POINT** anchor = ANCHOR_LEFT_UPPER
 
 ### OnClick
 
