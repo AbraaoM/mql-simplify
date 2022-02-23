@@ -248,7 +248,7 @@ Can construct a button just changing active to false.
 - **color** backgroundColor = SECONDARY_COLOR,
 - **color** borderColor = SECONDARY_COLOR,
 - **color** hoverColor = SECONDARY_COLOR,
-- **ENUM_ANCHOR_POINT** anchor = ANCHOR_LEFT_UPPER
+- **ENUM_BASE_CORNER** referenceCorner = CORNER_LEFT_UPPER
 
 ### OnClick
 
