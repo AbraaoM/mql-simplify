@@ -28,13 +28,15 @@ class CStrategies {
                                           double percentageRemain,
                                           double levelExecute);
 
+  bool CStrategies :: SetStopsForManual(double stopLoss,
+                                        double takeProfit);
 };
 
 //+------------------------------------------------------------------+
 //|  Breakeven function                                              |
 //+------------------------------------------------------------------+
 void CStrategies :: Breakeven (ulong ticket,
-                               double stopLoss_,
+                               double stopLoss,
                                double step = NULL) {
   bool trailingControl = true;
 
@@ -50,7 +52,7 @@ void CStrategies :: Breakeven (ulong ticket,
         trailingControl = false;
     }
     if(trailingControl)
-      TrailingStop(ticket, stopLoss_, step, 0);
+      TrailingStop(ticket, stopLoss, step, 0);
   }
 }
 
@@ -60,8 +62,8 @@ void CStrategies :: Breakeven (ulong ticket,
 double CStrategies :: Martingale (double factor,
                                   TRADE_TYPE type,
                                   double operationPrice,
-                                  double stopLoss_,
-                                  double takeProfit_) {
+                                  double stopLoss,
+                                  double takeProfit) {
   CTrade trade_M;
   ulong ticket;
   uint total = 0;
@@ -79,14 +81,14 @@ double CStrategies :: Martingale (double factor,
     trade_M.Buy(newVolume,
                 _Symbol,
                 operationPrice,
-                operationPrice - stopLoss_ * _Point,
-                operationPrice + takeProfit_ * _Point);
+                operationPrice - stopLoss * _Point,
+                operationPrice + takeProfit * _Point);
   if(type == SELL)
     trade_M.Sell(newVolume,
                  _Symbol,
                  operationPrice,
-                 operationPrice + stopLoss_ * _Point,
-                 operationPrice - takeProfit_ * _Point);
+                 operationPrice + stopLoss * _Point,
+                 operationPrice - takeProfit * _Point);
   return newVolume;
 }
 
@@ -130,6 +132,37 @@ bool CStrategies :: PartialClosePercent(ulong ticket,
     if(PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_SELL &&
         PositionGetDouble(POSITION_PRICE_CURRENT) == PositionGetDouble(POSITION_PRICE_OPEN) - levelExecute * _Point) {
       partialClose_trade.Buy(NormalizeDouble(volume * percentageRemain, 0));
+      return true;
+    }
+  }
+  return false;
+}
+
+//+------------------------------------------------------------------+
+//|  Define stops for the manual oppened positions                   |
+//+------------------------------------------------------------------+
+bool CStrategies :: SetStopsForManual(double stopLoss,
+                                      double takeProfit) {
+  CTrade setStopForManual_trade;
+  ulong ticket_;
+
+  if(PositionSelect(_Symbol)) {
+    ticket_ = PositionGetInteger(POSITION_TICKET);
+    if(PositionGetInteger(POSITION_REASON) == POSITION_REASON_CLIENT) {
+      if(PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_BUY &&
+          (PositionGetDouble(POSITION_SL) != PositionGetDouble(POSITION_PRICE_OPEN) - (stopLoss * _Point) ||
+           PositionGetDouble(POSITION_TP) != PositionGetDouble(POSITION_PRICE_OPEN) + (takeProfit * _Point))) {
+        setStopForManual_trade.PositionModify(ticket_,
+                                              PositionGetDouble(POSITION_PRICE_OPEN) - (stopLoss * _Point),
+                                              PositionGetDouble(POSITION_PRICE_OPEN) + (takeProfit * _Point));
+      }
+      if(PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_SELL &&
+          (PositionGetDouble(POSITION_SL) != PositionGetDouble(POSITION_PRICE_OPEN) + (stopLoss * _Point) ||
+           PositionGetDouble(POSITION_TP) != PositionGetDouble(POSITION_PRICE_OPEN) - (takeProfit * _Point))) {
+        setStopForManual_trade.PositionModify(ticket_,
+                                              PositionGetDouble(POSITION_PRICE_OPEN) + (stopLoss * _Point),
+                                              PositionGetDouble(POSITION_PRICE_OPEN) - (takeProfit * _Point));
+      }
       return true;
     }
   }
