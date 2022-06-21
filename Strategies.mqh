@@ -30,6 +30,11 @@ class CStrategies {
 
   bool CStrategies :: SetStopsForManual(double stopLoss,
                                         double takeProfit);
+
+  void CStrategies :: TrailingStop (ulong ticket,
+                                    double stopLoss,
+                                    double step = 0,
+                                    double startLevel = 0);
 };
 
 //+------------------------------------------------------------------+
@@ -167,6 +172,35 @@ bool CStrategies :: SetStopsForManual(double stopLoss,
     }
   }
   return false;
+}
+
+//+------------------------------------------------------------------+
+//|  Trainling stop function                                         |
+//+------------------------------------------------------------------+
+void CStrategies :: TrailingStop (ulong ticket,
+                                  double stopLoss,
+                                  double step = 0,
+                                  double startLevel = 0) {
+  CTrade trade_TS;
+  double newSL = 0;
+
+  if(step == 0)
+    step = SymbolInfoDouble(_Symbol, SYMBOL_TRADE_TICK_SIZE) / _Point;
+
+  if(PositionSelectByTicket(ticket)) {
+    if(PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_BUY &&
+        PositionGetDouble(POSITION_PRICE_CURRENT) >= PositionGetDouble(POSITION_PRICE_OPEN) + startLevel * _Point) {
+      newSL = PositionGetDouble(POSITION_PRICE_CURRENT) - stopLoss * _Point;
+      if(newSL > PositionGetDouble(POSITION_SL))
+        trade_TS.PositionModify(ticket, newSL, PositionGetDouble(POSITION_TP));
+    }
+    if(PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_SELL &&
+        PositionGetDouble(POSITION_PRICE_CURRENT) <= PositionGetDouble(POSITION_PRICE_OPEN) - startLevel * _Point) {
+      newSL = PositionGetDouble(POSITION_PRICE_CURRENT) + stopLoss * _Point;
+      if(newSL < PositionGetDouble(POSITION_SL))
+        trade_TS.PositionModify(ticket, newSL, PositionGetDouble(POSITION_TP));
+    }
+  }
 }
 
 
