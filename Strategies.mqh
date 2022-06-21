@@ -20,6 +20,14 @@ class CStrategies {
                                     double stopLoss,
                                     double takeProfit);
 
+  bool CStrategies :: PartialCloseAmount(ulong ticket,
+                                         double volumeToClose,
+                                         double levelExecute);
+
+  bool CStrategies :: PartialClosePercent(ulong ticket,
+                                          double percentageRemain,
+                                          double levelExecute);
+
 };
 
 //+------------------------------------------------------------------+
@@ -80,6 +88,52 @@ double CStrategies :: Martingale (double factor,
                  operationPrice + stopLoss_ * _Point,
                  operationPrice - takeProfit_ * _Point);
   return newVolume;
+}
+
+//+------------------------------------------------------------------+
+//| Partial close a position based on volume                         |
+//+------------------------------------------------------------------+
+bool CStrategies :: PartialCloseAmount(ulong ticket,
+                                       double volumeToClose,
+                                       double levelExecute) {
+  CTrade partialClose_trade;
+  if(PositionSelectByTicket(ticket)) {
+    if(PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_BUY &&
+        PositionGetDouble(POSITION_PRICE_CURRENT) == PositionGetDouble(POSITION_PRICE_OPEN) + levelExecute * _Point) {
+      partialClose_trade.Sell(volumeToClose);
+      return true;
+    }
+    if(PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_SELL &&
+        PositionGetDouble(POSITION_PRICE_CURRENT) == PositionGetDouble(POSITION_PRICE_OPEN) - levelExecute * _Point) {
+      partialClose_trade.Buy(volumeToClose);
+      return true;
+    }
+  }
+  return false;
+}
+
+//+------------------------------------------------------------------+
+//|  Partial close a position based on percentage                    |
+//+------------------------------------------------------------------+
+bool CStrategies :: PartialClosePercent(ulong ticket,
+                                        double percentageRemain,
+                                        double levelExecute) {
+  CTrade partialClose_trade;
+  double volume;
+  if(PositionSelectByTicket(ticket)) {
+    volume = PositionGetDouble(POSITION_VOLUME);
+    if(PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_BUY &&
+        PositionGetDouble(POSITION_PRICE_CURRENT) == PositionGetDouble(POSITION_PRICE_OPEN) + levelExecute * _Point) {
+      partialClose_trade.Sell(NormalizeDouble(volume * percentageRemain, 0));
+      return true;
+    }
+    if(PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_SELL &&
+        PositionGetDouble(POSITION_PRICE_CURRENT) == PositionGetDouble(POSITION_PRICE_OPEN) - levelExecute * _Point) {
+      partialClose_trade.Buy(NormalizeDouble(volume * percentageRemain, 0));
+      return true;
+    }
+  }
+  return false;
 }
 
 
