@@ -12,9 +12,11 @@ class COperations {
   double COperations :: AccumulatedProfit(datetime initDate,
                                           datetime finishDate,
                                           string symbol_AP = NULL);
-                                          
+
   int COperations :: NumberOfTrades (datetime initDate,
                                      datetime finishDate);
+
+  ulong COperations :: PastOperationTicket(int shift);
 };
 
 //+------------------------------------------------------------------+
@@ -44,5 +46,19 @@ int COperations :: NumberOfTrades (datetime initDate,
                                    datetime finishDate) {
   HistorySelect(initDate, finishDate);
   return HistoryDealsTotal();
+}
+
+//+------------------------------------------------------------------+
+//|  Past ticket function                                            |
+//+------------------------------------------------------------------+
+ulong COperations :: PastOperationTicket(int shift) {
+  uint dealsTotal;
+  string today;
+
+  today = TimeToString(TimeLocal(), TIME_DATE);
+
+  HistorySelect(StringToTime(today), TimeCurrent());
+  dealsTotal = HistoryDealsTotal();
+  return HistoryDealGetTicket(dealsTotal - shift);
 }
 //+------------------------------------------------------------------+
