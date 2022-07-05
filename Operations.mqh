@@ -12,6 +12,9 @@ class COperations {
   double COperations :: AccumulatedProfit(datetime initDate,
                                           datetime finishDate,
                                           string symbol_AP = NULL);
+                                          
+  int COperations :: NumberOfTrades (datetime initDate,
+                                     datetime finishDate);
 };
 
 //+------------------------------------------------------------------+
@@ -32,5 +35,14 @@ double COperations :: AccumulatedProfit(datetime initDate_AP,
   }
 
   return profitAcum;
+}
+
+//+------------------------------------------------------------------+
+//|  Number of trades in a period function                           |
+//+------------------------------------------------------------------+
+int COperations :: NumberOfTrades (datetime initDate,
+                                   datetime finishDate) {
+  HistorySelect(initDate, finishDate);
+  return HistoryDealsTotal();
 }
 //+------------------------------------------------------------------+
