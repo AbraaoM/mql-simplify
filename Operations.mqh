@@ -19,6 +19,15 @@ class COperations {
   ulong COperations :: PastOperationTicket(int shift);
 };
 
+class COrders {
+  void COrders ::    DeleteAllOrders();
+}
+
+class CPositions {
+  void CPositions :: ExpertPositions (long magicNumber,
+                                      ulong &dest_tickets[]);
+}
+
 //+------------------------------------------------------------------+
 //|  Acumulated profit function                                     |
 //+------------------------------------------------------------------+
@@ -60,5 +69,36 @@ ulong COperations :: PastOperationTicket(int shift) {
   HistorySelect(StringToTime(today), TimeCurrent());
   dealsTotal = HistoryDealsTotal();
   return HistoryDealGetTicket(dealsTotal - shift);
+}
+
+//+------------------------------------------------------------------+
+//|  Delete all orders function                                      |
+//+------------------------------------------------------------------+
+void COrders :: DeleteAllOrders() {
+  CTrade trade_DAO;
+  ulong ticket = 0;
+  if(OrdersTotal() != 0) {
+    for(int i = 0; i < OrdersTotal(); i++) {
+      ticket = OrderGetTicket(i);
+      trade_DAO.OrderDelete(ticket);
+    }
+  }
+}
+
+//+------------------------------------------------------------------+
+//|  Expert positions function                                       |
+//+------------------------------------------------------------------+
+void CPositions :: ExpertPositions (long magicNumber,
+                                    ulong &dest_tickets[]) {
+  ulong ticket;
+  ArrayFree(dest_tickets);
+
+  for(int i = 0; i < PositionsTotal(); i++) {
+    ticket = PositionGetTicket(i);
+    PositionSelectByTicket(ticket);
+    if(PositionGetInteger(POSITION_MAGIC) == magicNumber)
+      ArrayResize(dest_tickets, i + 1);
+    dest_tickets[i] = ticket;
+  }
 }
 //+------------------------------------------------------------------+
