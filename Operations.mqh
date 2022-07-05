@@ -26,6 +26,8 @@ class COrders {
 class CPositions {
   void CPositions :: ExpertPositions (long magicNumber,
                                       ulong &dest_tickets[]);
+                                      
+  void CPositions :: CloseAllPositions(string symbol, int deviation);
 }
 
 class CDeals {
@@ -104,6 +106,20 @@ void CPositions :: ExpertPositions (long magicNumber,
     if(PositionGetInteger(POSITION_MAGIC) == magicNumber)
       ArrayResize(dest_tickets, i + 1);
     dest_tickets[i] = ticket;
+  }
+}
+
+//+------------------------------------------------------------------+
+//|  Close all positions function                                    |
+//+------------------------------------------------------------------+
+void CPositions :: CloseAllPositions(string symbol, int deviation) {
+  CTrade trade_TL;
+  ulong ticket = 0;
+  if(PositionSelect(symbol)) {
+    for(int i = 0; i < PositionsTotal(); i++) {
+      ticket = PositionGetTicket(i);
+      trade_TL.PositionClose(ticket, deviation);
+    }
   }
 }
 
