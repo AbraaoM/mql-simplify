@@ -13,6 +13,40 @@ Sum all profit between two dates.
 
 * **double** profitAcum - Sum of all profit between dates
 
+## ProfitDay
+
+Sum all profit last day.
+
+**Return**
+
+* **double** profitAcum - Sum of all last day
+
+## ProfitWeek
+
+Sum all profit last week.
+
+**Return**
+
+* **double** profitAcum - Sum of all last week
+
+## ProfitMonth
+
+Sum all profit last month.
+
+**Return**
+
+* **double** profitAcum - Sum of all last month
+
+## ProfitYear
+
+Sum all profit last year.
+
+**Return**
+
+* **double** profitAcum - Sum of all last year
+
+
+
 ## CloseAllPositions
 
 Close all opened positions on current symbol.

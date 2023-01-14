@@ -47,9 +47,19 @@ Put stop orders by price.
 - **TRADE_TYPE** m_tradeType
 - **double** so_price
 
-## LimitOrderPrice
+## StopOrderPoints
 
-Put limit orders by price.
+Put stop orders by points.
+
+**Parameters**
+
+- **bool&** m_requirements[]
+- **TRADE_TYPE** m_tradeType
+- **double** so_price
+
+## LimitOrderPoints
+
+Put limit orders by points.
 
 **Parameters**
 
@@ -91,3 +101,45 @@ Open a order on ask, can be a buy or sell.
 
 - **bool&** m_requirements[]
 - **TRADE_TYPE** m_tradeType
+
+## GetVolume
+
+Get volume of orders send by class.
+
+**Return**
+- **double** volume
+
+## SetVolume
+
+Set a new value for volume of orders send by class.
+
+**Parameters**
+- **double** newVolume
+
+## GetStopLoss
+
+Get stop loss of orders send by class.
+
+**Return**
+- **double** stopLoss
+
+## SetStoploss
+
+Set a new value for stop loss of orders send by class.
+
+**Parameters**
+- **double** newStopLoss
+
+## GetTakeProfit
+
+Get take profit of orders send by class.
+
+**Return**
+- **double** takeProfit
+
+## SetTakeProfit
+
+Set a new value for take profit of orders send by class.
+
+**Parameters**
+- **double** newTakeProfit

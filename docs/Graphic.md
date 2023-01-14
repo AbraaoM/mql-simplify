@@ -123,7 +123,7 @@ Create a label object and plot on graph.
 - **int** fontSize = DEFAULT_FONT_SIZE
 - **color** fontColor = FONT_COLOR
 - **ENUM_ANCHOR_POINT** anchor = ANCHOR_LEFT_UPPER
-- **ENUM_BASE_CORNER** corner = CORNER_LEFT_UPPER
+- **ENUM_BASE_CORNER** referenceCorner = CORNER_LEFT_UPPER 
 
 **Return**
 - **string** - Name of object
@@ -195,6 +195,7 @@ Variable active si defined as true.
 - **color** fontColor = FONT_COLOR,
 - **color** bgColor = SECONDARY_COLOR,
 - **ENUM_ALIGN_MODE** align = ALIGN_CENTER
+- **ENUM_BASE_CORNER** referenceCorner = CORNER_LEFT_UPPER 
 
 **Return**
 
@@ -207,6 +208,13 @@ Return value of the variable active.
 ### GetValue
 
 Get the value of the edit that can be a input changed by the user. 
+
+### SetValue
+
+Set the value of the edit based on new text on parameters. 
+
+**Parameters**
+- **string** newText
 
 ### Destroy
 
@@ -239,7 +247,8 @@ Can construct a button just changing active to false.
 - **color** fontColor = FONT_COLOR,
 - **color** backgroundColor = SECONDARY_COLOR,
 - **color** borderColor = SECONDARY_COLOR,
-- **color** hoverColor = SECONDARY_COLOR
+- **color** hoverColor = SECONDARY_COLOR,
+- **ENUM_BASE_CORNER** referenceCorner = CORNER_LEFT_UPPER
 
 ### OnClick
 
@@ -298,6 +307,21 @@ Turn active state to false, but some information was mantained on class.
 Destroy button object, but the class still exists. 
 Don't forget delete class to avoid memory leak.
 
+## Dropdown
+Class to control a dropdown, this class don't implements a dropdown 
+controller button, just renderize an organized array of buttons 
+passed as reference to contructor. 
+
+### Constructor
+Receive an array of buttons and copy this buttons to a internal array to be accessed
+by other internal methods who list and hide dropdown elements. 
+**Parameters**
+- **CButton&** items[] 
+
+### Open
+Draw a list of buttons on chart based on array of button received on contructor.
+### Close
+Destroy all button on screen closing the dropdown menu.
 
 
 
