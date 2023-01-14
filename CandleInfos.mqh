@@ -9,6 +9,13 @@
 #include "NewTypes.mqh"
 
 class CCandleInfos {
+ private:
+  double             pastClose;
+
+ public:
+
+  CCandleInfos ::    CCandleInfos();
+
   double CCandleInfos :: CandleSize (ENUM_TIMEFRAMES u_timeframe = PERIOD_CURRENT,
                                      int u_shift = 1);
 
@@ -17,10 +24,17 @@ class CCandleInfos {
 
   bool CCandleInfos :: IsCandleNegative (ENUM_TIMEFRAMES u_timeframe = PERIOD_CURRENT,
                                          int u_shift = 1);
-                                         
+
   bool CCandleInfos :: IsNewCandle(ENUM_TIMEFRAMES timeframe = 0);
 };
 
+
+//+------------------------------------------------------------------+
+//|  Constructor                                                                |
+//+------------------------------------------------------------------+
+CCandleInfos :: CCandleInfos() {
+  pastClose = 0;
+}
 
 //+------------------------------------------------------------------+
 //|  Candle size function                                            |
