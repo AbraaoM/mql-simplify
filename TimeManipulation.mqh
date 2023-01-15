@@ -9,12 +9,13 @@
 #include "NewTypes.mqh"
 
 class CTimeManipulation {
+ public:
   string CTimeManipulation :: IntTimeToString (int time);
-  
+
   int CTimeManipulation :: StringTimeToInt (
     string time,
     ENUM_TIME_STRING_TO_INT_TYPES selector);
-    
+
   void CTimeManipulation :: TimeStringTokenizer (
     string time,
     string &tokenizedTime[]);
