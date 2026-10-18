@@ -34,11 +34,11 @@ COrders::~COrders() {
 //+------------------------------------------------------------------+
 void COrders :: DeleteAllOrders() {
   ulong ticket = 0;
-  if(OrdersTotal() != 0) {
-    for(int i = 0; i < OrdersTotal(); i++) {
-      ticket = OrderGetTicket(i);
+  //--- backwards: deleting an order shifts the indexes of the ones after it
+  for(int i = OrdersTotal() - 1; i >= 0; i--) {
+    ticket = OrderGetTicket(i);
+    if(ticket != 0)
       tradeOperations.OrderDelete(ticket);
-    }
   }
 }
 //+------------------------------------------------------------------+

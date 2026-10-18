@@ -43,10 +43,13 @@ void CPositions :: ExpertPositions (long magicNumber,
 
   for(int i = 0; i < PositionsTotal(); i++) {
     ticket = PositionGetTicket(i);
-    PositionSelectByTicket(ticket);
-    if(PositionGetInteger(POSITION_MAGIC) == magicNumber)
-      ArrayResize(dest_tickets, i + 1);
-    dest_tickets[i] = ticket;
+    if(ticket == 0 || !PositionSelectByTicket(ticket))
+      continue;
+    if(PositionGetInteger(POSITION_MAGIC) == magicNumber) {
+      int n = ArraySize(dest_tickets);
+      ArrayResize(dest_tickets, n + 1);
+      dest_tickets[n] = ticket;
+    }
   }
 }
 
@@ -56,11 +59,13 @@ void CPositions :: ExpertPositions (long magicNumber,
 void CPositions :: CloseAllPositions(string symbol, int deviation) {
   CTrade trade_TL;
   ulong ticket = 0;
-  if(PositionSelect(symbol)) {
-    for(int i = 0; i < PositionsTotal(); i++) {
-      ticket = PositionGetTicket(i);
-      trade_TL.PositionClose(ticket, deviation);
-    }
+  string target = (symbol == NULL || symbol == "") ? _Symbol : symbol;
+  //--- backwards: closing a position shifts the indexes of the ones after it
+  for(int i = PositionsTotal() - 1; i >= 0; i--) {
+    ticket = PositionGetTicket(i);
+    if(ticket == 0 || PositionGetString(POSITION_SYMBOL) != target)
+      continue;
+    trade_TL.PositionClose(ticket, deviation);
   }
 }
 //+------------------------------------------------------------------+

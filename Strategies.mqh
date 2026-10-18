@@ -9,6 +9,37 @@
 #include <Trade/Trade.mqh>
 #include "NewTypes.mqh"
 
+//+------------------------------------------------------------------+
+//|  Rounds a volume DOWN to the symbol volume step; 0 when below the |
+//|  minimum volume                                                   |
+//+------------------------------------------------------------------+
+double SimplifyNormalizeVolume(string symbol, double volume) {
+  double step = SymbolInfoDouble(symbol, SYMBOL_VOLUME_STEP);
+  double vmin = SymbolInfoDouble(symbol, SYMBOL_VOLUME_MIN);
+  if(step <= 0)
+    return 0;
+  double v = MathFloor(volume / step + 1e-9) * step;
+  int digits = (int)MathMax(0, MathCeil(-MathLog10(step)));
+  v = NormalizeDouble(v, digits);
+  return (v < vmin) ? 0 : v;
+}
+
+//+------------------------------------------------------------------+
+//|  True when the selected position moved levelExecute points in     |
+//|  its favour (buy: current >= open + level, sell: current <= open  |
+//|  - level). Replaces an exact '==' price comparison.               |
+//+------------------------------------------------------------------+
+bool SimplifyPartialLevelReached(double levelExecute) {
+  double point = SymbolInfoDouble(PositionGetString(POSITION_SYMBOL), SYMBOL_POINT);
+  double open = PositionGetDouble(POSITION_PRICE_OPEN);
+  double current = PositionGetDouble(POSITION_PRICE_CURRENT);
+  if(PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_BUY)
+    return current >= open + levelExecute * point;
+  if(PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_SELL)
+    return current <= open - levelExecute * point;
+  return false;
+}
+
 class CStrategies {
  public:
   void CStrategies :: Breakeven (ulong ticket,
@@ -105,17 +136,11 @@ bool CStrategies :: PartialCloseAmount(ulong ticket,
                                        double volumeToClose,
                                        double levelExecute) {
   CTrade partialClose_trade;
-  if(PositionSelectByTicket(ticket)) {
-    if(PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_BUY &&
-        PositionGetDouble(POSITION_PRICE_CURRENT) == PositionGetDouble(POSITION_PRICE_OPEN) + levelExecute * _Point) {
-      partialClose_trade.Sell(volumeToClose);
-      return true;
-    }
-    if(PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_SELL &&
-        PositionGetDouble(POSITION_PRICE_CURRENT) == PositionGetDouble(POSITION_PRICE_OPEN) - levelExecute * _Point) {
-      partialClose_trade.Buy(volumeToClose);
-      return true;
-    }
+  if(PositionSelectByTicket(ticket) && SimplifyPartialLevelReached(levelExecute)) {
+    double volume = SimplifyNormalizeVolume(PositionGetString(POSITION_SYMBOL), volumeToClose);
+    if(volume <= 0)
+      return false;
+    return partialClose_trade.PositionClosePartial(ticket, volume);
   }
   return false;
 }
@@ -128,18 +153,14 @@ bool CStrategies :: PartialClosePercent(ulong ticket,
                                         double levelExecute) {
   CTrade partialClose_trade;
   double volume;
-  if(PositionSelectByTicket(ticket)) {
+  if(PositionSelectByTicket(ticket) && SimplifyPartialLevelReached(levelExecute)) {
     volume = PositionGetDouble(POSITION_VOLUME);
-    if(PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_BUY &&
-        PositionGetDouble(POSITION_PRICE_CURRENT) == PositionGetDouble(POSITION_PRICE_OPEN) + levelExecute * _Point) {
-      partialClose_trade.Sell(NormalizeDouble(volume * percentageRemain, 0));
-      return true;
-    }
-    if(PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_SELL &&
-        PositionGetDouble(POSITION_PRICE_CURRENT) == PositionGetDouble(POSITION_PRICE_OPEN) - levelExecute * _Point) {
-      partialClose_trade.Buy(NormalizeDouble(volume * percentageRemain, 0));
-      return true;
-    }
+    //--- percentageRemain is the share that stays open (0..1): close the rest
+    double toClose = SimplifyNormalizeVolume(PositionGetString(POSITION_SYMBOL),
+                                             volume * (1.0 - percentageRemain));
+    if(toClose <= 0 || toClose >= volume)
+      return false;
+    return partialClose_trade.PositionClosePartial(ticket, toClose);
   }
   return false;
 }
