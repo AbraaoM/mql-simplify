@@ -10,6 +10,7 @@
 #include "NewTypes.mqh"
 
 class CStrategies {
+ public:
   void CStrategies :: Breakeven (ulong ticket,
                                  double stopLoss,
                                  double step);
