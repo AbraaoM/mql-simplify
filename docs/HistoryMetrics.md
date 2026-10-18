@@ -59,3 +59,16 @@ Entry costs (commission, fee, swap) of a position shared among its exit deals by
 ## Tests
 
 `tests/TestHistory.mq5` (script, no account needed) and `tests/TradeFreeHeaders.mq5` (build check with no trade code and no MessageBox).
+
+## DealGroups.mqh: CDealGroups
+
+Trade statistics (`CTradeStats`) grouped by magic number, by a name per magic or by symbol. A position belongs to the group of its entry deal, so later deals of the same position stay in that group.
+
+- Configure(**ENUM_DEAL_GROUP_MODE** mode, **string** magicMap = "") - `DEAL_GROUP_MAGIC`, `DEAL_GROUP_NAME` (map `"1001=Trend;1002=Grid"`, names cut at 24 characters, magics without a name keep their number) or `DEAL_GROUP_SYMBOL`
+- SetLabels(manual, magicPrefix) - texts of the keys (defaults "Manual (magic 0)" and "Magic ")
+- **int** GroupOfPosition(positionId, magic, symbol, remember = true) - the first call with remember=true fixes the key; remember=false only looks up
+- **int** Group(key), Count(), At(i), KeyFor(magic, symbol), NameOf(magic, name), ParseNames(map)
+- ResetDay(), ResetOpen(), Reset() (names stay)
+- **int** Sorted(**int** &idx[]) - indexes by net + floating, highest first (stable)
+
+Tests: `tests/TestDealGroups.mq5`.

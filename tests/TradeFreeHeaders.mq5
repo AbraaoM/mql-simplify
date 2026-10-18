@@ -15,6 +15,7 @@
 #include "../DayClock.mqh"
 #include "../HistoryReader.mqh"
 #include "../HistoryMetrics.mqh"
+#include "../DealGroups.mqh"
 
 class CNoopListener : public CDealListener {
  public:
@@ -42,6 +43,9 @@ int OnCalculate(const int rates_total, const int prev_calculated, const int begi
     dd.Set(AccountInfoDouble(ACCOUNT_EQUITY));
     CPositionCosts costs;
     costs.AddEntry(1, 1.0, 0.0);
+    CDealGroups groups;
+    groups.Configure(DEAL_GROUP_NAME, "1=A");
+    groups.GroupOfPosition(1, 1, _Symbol);
     CTimeManipulation tm;
     Comment(tm.IntTimeToString(dayClock.BoundaryHour(TimeTradeServer()) * 3600), " ",
             (int)SimplifyDealKind(DEAL_TYPE_BALANCE), " ", stats.ProfitFactor(), " ", dd.MaxDrawdown(), " ",
