@@ -9,3 +9,4 @@
 - [NewTypes](NewTypes.md)
 - [DealMath](DealMath.md)
 - [Messages](Messages.md)
+- [History](HistoryMetrics.md)
