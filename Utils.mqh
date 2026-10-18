@@ -63,3 +63,48 @@ bool CUtils :: BooleanArray(bool& ut_array[]) {
   return true;
 }
 //+------------------------------------------------------------------+
+
+//+------------------------------------------------------------------+
+//|  Candle size function: |open - close| of the candle (price units) |
+//|  Same calculation as CCandleInfos::CandleSize                     |
+//+------------------------------------------------------------------+
+double CUtils :: CandleSize(ENUM_TIMEFRAMES u_timeframe = PERIOD_CURRENT,
+                            int u_shift = 1) {
+  return MathAbs(iOpen(_Symbol, u_timeframe, u_shift) - iClose(_Symbol, u_timeframe, u_shift));
+}
+
+//+------------------------------------------------------------------+
+//|  Is candle positive function (close > open)                      |
+//+------------------------------------------------------------------+
+bool CUtils :: IsCandlePositive(ENUM_TIMEFRAMES u_timeframe = PERIOD_CURRENT,
+                                int u_shift = 1) {
+  return iOpen(_Symbol, u_timeframe, u_shift) < iClose(_Symbol, u_timeframe, u_shift);
+}
+
+//+------------------------------------------------------------------+
+//|  Is candle negative function (close < open)                      |
+//+------------------------------------------------------------------+
+bool CUtils :: IsCandleNegative(ENUM_TIMEFRAMES u_timeframe = PERIOD_CURRENT,
+                                int u_shift = 1) {
+  return iOpen(_Symbol, u_timeframe, u_shift) > iClose(_Symbol, u_timeframe, u_shift);
+}
+
+//+------------------------------------------------------------------+
+//|  Expert positions function: tickets of the open positions with   |
+//|  the given magic number                                          |
+//+------------------------------------------------------------------+
+void CUtils :: ExpertPositions(long magicNumber,
+                               ulong &tickets[]) {
+  ArrayFree(tickets);
+  for(int i = 0; i < PositionsTotal(); i++) {
+    ulong ticket = PositionGetTicket(i);
+    if(ticket == 0 || !PositionSelectByTicket(ticket))
+      continue;
+    if(PositionGetInteger(POSITION_MAGIC) == magicNumber) {
+      int n = ArraySize(tickets);
+      ArrayResize(tickets, n + 1);
+      tickets[n] = ticket;
+    }
+  }
+}
+//+------------------------------------------------------------------+
