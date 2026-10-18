@@ -59,11 +59,13 @@ void CPositions :: ExpertPositions (long magicNumber,
 void CPositions :: CloseAllPositions(string symbol, int deviation) {
   CTrade trade_TL;
   ulong ticket = 0;
-  if(PositionSelect(symbol)) {
-    for(int i = 0; i < PositionsTotal(); i++) {
-      ticket = PositionGetTicket(i);
-      trade_TL.PositionClose(ticket, deviation);
-    }
+  string target = (symbol == NULL || symbol == "") ? _Symbol : symbol;
+  //--- backwards: closing a position shifts the indexes of the ones after it
+  for(int i = PositionsTotal() - 1; i >= 0; i--) {
+    ticket = PositionGetTicket(i);
+    if(ticket == 0 || PositionGetString(POSITION_SYMBOL) != target)
+      continue;
+    trade_TL.PositionClose(ticket, deviation);
   }
 }
 //+------------------------------------------------------------------+
