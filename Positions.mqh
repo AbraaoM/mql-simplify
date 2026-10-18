@@ -43,10 +43,13 @@ void CPositions :: ExpertPositions (long magicNumber,
 
   for(int i = 0; i < PositionsTotal(); i++) {
     ticket = PositionGetTicket(i);
-    PositionSelectByTicket(ticket);
-    if(PositionGetInteger(POSITION_MAGIC) == magicNumber)
-      ArrayResize(dest_tickets, i + 1);
-    dest_tickets[i] = ticket;
+    if(ticket == 0 || !PositionSelectByTicket(ticket))
+      continue;
+    if(PositionGetInteger(POSITION_MAGIC) == magicNumber) {
+      int n = ArraySize(dest_tickets);
+      ArrayResize(dest_tickets, n + 1);
+      dest_tickets[n] = ticket;
+    }
   }
 }
 
