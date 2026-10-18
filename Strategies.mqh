@@ -106,7 +106,7 @@ double CStrategies :: Martingale (double factor,
   uint total = 0;
   double lastVolume = 0, newVolume = 0;
 
-  HistorySelect(0, TimeLocal());
+  HistorySelect(0, TimeTradeServer());
   total = HistoryDealsTotal();
 
   ticket = HistoryDealGetTicket(total - 1);

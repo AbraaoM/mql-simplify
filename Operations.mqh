@@ -103,9 +103,10 @@ ulong COperations :: PastOperationTicket(int shift) {
   uint dealsTotal;
   string today;
 
-  today = TimeToString(TimeLocal(), TIME_DATE);
+  //--- "today" is the trade server's day, not the PC clock's
+  today = TimeToString(TimeTradeServer(), TIME_DATE);
 
-  HistorySelect(StringToTime(today), TimeCurrent());
+  HistorySelect(StringToTime(today), TimeTradeServer());
   dealsTotal = HistoryDealsTotal();
   return HistoryDealGetTicket(dealsTotal - shift);
 }
