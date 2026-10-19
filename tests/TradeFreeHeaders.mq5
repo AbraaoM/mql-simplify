@@ -12,17 +12,40 @@
 #include "../Storage.mqh"
 #include "../TimeManipulation.mqh"
 #include "../DealMath.mqh"
+#include "../DayClock.mqh"
+#include "../HistoryReader.mqh"
+#include "../HistoryMetrics.mqh"
+
+class CNoopListener : public CDealListener {
+ public:
+  int                deals;
+                     CNoopListener() : deals(0) {}
+  virtual void       OnDeal(ulong ticket) { deals++; }
+};
+
+CHistoryReader reader;
+CNoopListener  noopListener;
+CDayClock      dayClock;
 
 int OnInit() {
+  reader.Configure(500, 10);
+  dayClock.SetHour(0);
   return INIT_SUCCEEDED;
 }
 
 int OnCalculate(const int rates_total, const int prev_calculated, const int begin, const double &price[]) {
   if(prev_calculated == 0) {
+    reader.Read(GetPointer(noopListener));
+    CTradeStats stats;
+    stats.AddTradeResult(SimplifyHistoryProfit(dayClock.Today(), TimeTradeServer()) + SimplifyFloatingProfit(), true);
+    CDrawdown dd;
+    dd.Set(AccountInfoDouble(ACCOUNT_EQUITY));
+    CPositionCosts costs;
+    costs.AddEntry(1, 1.0, 0.0);
     CTimeManipulation tm;
-    Comment(tm.IntTimeToString(3600), " ",
-            SimplifyHistoryProfit(0, TimeTradeServer()) + SimplifyFloatingProfit(), " ",
-            SimplifyIsTradeDeal(DEAL_TYPE_BALANCE));
+    Comment(tm.IntTimeToString(dayClock.BoundaryHour(TimeTradeServer()) * 3600), " ",
+            (int)SimplifyDealKind(DEAL_TYPE_BALANCE), " ", stats.ProfitFactor(), " ", dd.MaxDrawdown(), " ",
+            costs.TakeExitShare(1, 1.0, false));
   }
   return rates_total;
 }
