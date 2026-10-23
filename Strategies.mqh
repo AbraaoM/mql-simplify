@@ -109,11 +109,15 @@ double CStrategies :: Martingale (double factor,
   HistorySelect(0, TimeTradeServer());
   total = HistoryDealsTotal();
 
+  if(total == 0)
+    return 0;
   ticket = HistoryDealGetTicket(total - 1);
   lastVolume = HistoryDealGetDouble(ticket, DEAL_VOLUME);
 
-  HistoryDealGetInteger(ticket, DEAL_TYPE);
-  newVolume = lastVolume * factor;
+  //--- rounded to the volume step; no order when it falls below the minimum volume
+  newVolume = SimplifyNormalizeVolume(_Symbol, lastVolume * factor);
+  if(newVolume <= 0)
+    return 0;
   if(type == BUY)
     trade_M.Buy(newVolume,
                 _Symbol,
@@ -175,20 +179,25 @@ bool CStrategies :: SetStopsForManual(double stopLoss,
 
   if(PositionSelect(_Symbol)) {
     ticket_ = PositionGetInteger(POSITION_TICKET);
+    //--- compare prices normalized to the symbol digits: a raw double '!=' was almost always
+    //    true and sent a PositionModify (error 10025 "no changes") on every call
+    double open = PositionGetDouble(POSITION_PRICE_OPEN);
+    double sl = NormalizeDouble(PositionGetDouble(POSITION_SL), _Digits);
+    double tp = NormalizeDouble(PositionGetDouble(POSITION_TP), _Digits);
     if(PositionGetInteger(POSITION_REASON) == POSITION_REASON_CLIENT) {
       if(PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_BUY &&
-          (PositionGetDouble(POSITION_SL) != PositionGetDouble(POSITION_PRICE_OPEN) - (stopLoss * _Point) ||
-           PositionGetDouble(POSITION_TP) != PositionGetDouble(POSITION_PRICE_OPEN) + (takeProfit * _Point))) {
+          (sl != NormalizeDouble(open - stopLoss * _Point, _Digits) ||
+           tp != NormalizeDouble(open + takeProfit * _Point, _Digits))) {
         setStopForManual_trade.PositionModify(ticket_,
-                                              PositionGetDouble(POSITION_PRICE_OPEN) - (stopLoss * _Point),
-                                              PositionGetDouble(POSITION_PRICE_OPEN) + (takeProfit * _Point));
+                                              NormalizeDouble(open - stopLoss * _Point, _Digits),
+                                              NormalizeDouble(open + takeProfit * _Point, _Digits));
       }
       if(PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_SELL &&
-          (PositionGetDouble(POSITION_SL) != PositionGetDouble(POSITION_PRICE_OPEN) + (stopLoss * _Point) ||
-           PositionGetDouble(POSITION_TP) != PositionGetDouble(POSITION_PRICE_OPEN) - (takeProfit * _Point))) {
+          (sl != NormalizeDouble(open + stopLoss * _Point, _Digits) ||
+           tp != NormalizeDouble(open - takeProfit * _Point, _Digits))) {
         setStopForManual_trade.PositionModify(ticket_,
-                                              PositionGetDouble(POSITION_PRICE_OPEN) + (stopLoss * _Point),
-                                              PositionGetDouble(POSITION_PRICE_OPEN) - (takeProfit * _Point));
+                                              NormalizeDouble(open + stopLoss * _Point, _Digits),
+                                              NormalizeDouble(open - takeProfit * _Point, _Digits));
       }
       return true;
     }
@@ -197,7 +206,7 @@ bool CStrategies :: SetStopsForManual(double stopLoss,
 }
 
 //+------------------------------------------------------------------+
-//|  Trainling stop function                                         |
+//|  Trailing stop function                                         |
 //+------------------------------------------------------------------+
 void CStrategies :: TrailingStop (ulong ticket,
                                   double stopLoss,
@@ -219,7 +228,8 @@ void CStrategies :: TrailingStop (ulong ticket,
     if(PositionGetInteger(POSITION_TYPE) == POSITION_TYPE_SELL &&
         PositionGetDouble(POSITION_PRICE_CURRENT) <= PositionGetDouble(POSITION_PRICE_OPEN) - startLevel * _Point) {
       newSL = PositionGetDouble(POSITION_PRICE_CURRENT) + stopLoss * _Point;
-      if(newSL < PositionGetDouble(POSITION_SL))
+      //--- SL 0 means "no stop yet": a sell must get its first stop too
+      if(PositionGetDouble(POSITION_SL) == 0 || newSL < PositionGetDouble(POSITION_SL))
         trade_TS.PositionModify(ticket, newSL, PositionGetDouble(POSITION_TP));
     }
   }

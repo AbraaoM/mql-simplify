@@ -12,7 +12,7 @@
 class CInputCheck {
  public:
   bool CInputCheck :: VolumesOk(double volume,
-                                string messageLassThanMin = NULL,
+                                string messageLessThanMin = NULL,
                                 string messageGreaterThanMax = NULL,
                                 string messageNotMultiple = NULL);
 
@@ -50,8 +50,8 @@ bool CInputCheck :: VolumesOk(double volume,
     SimplifyMessageBox(StringFormat(messageGreaterThanMax, max_volume));
     return false;
   }
-  int ratio = (int)MathRound(volume / volume_step);
-  if(MathAbs(ratio * volume_step - volume) > 0.0000001) {
+  int ratio = (volume_step > 0) ? (int)MathRound(volume / volume_step) : 0;
+  if(volume_step > 0 && MathAbs(ratio * volume_step - volume) > 0.0000001) {
     SimplifyMessageBox(StringFormat(messageNotMultiple, volume_step));
     return false;
   }

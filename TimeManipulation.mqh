@@ -60,6 +60,12 @@ int CTimeManipulation :: StringTimeToInt (string time,
 
   TimeStringTokenizer(time, tokenizedTime);
 
+  //--- a string with fewer fields than the selector needs returns 0 instead of an
+  //    "array out of range" error that stops the program
+  int needed = (selector == HHMMSS) ? 3 : ((selector == HHMM || selector == MMSS) ? 2 : 1);
+  if(ArraySize(tokenizedTime) < needed)
+    return 0;
+
   switch (selector) {
   case   HHMMSS:
     absoluteValueTime = (int)(StringToInteger(tokenizedTime[0]) * 3600);
