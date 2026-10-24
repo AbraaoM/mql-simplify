@@ -9,6 +9,7 @@
 #include <Trade/Trade.mqh>
 
 #include "NewTypes.mqh"
+#include "DealMath.mqh"
 
 class COperations {
  protected:
@@ -31,18 +32,8 @@ class COperations {
 double COperations :: AccumulatedProfit(datetime initDate_AP,
                                         datetime finishDate_AP,
                                         string symbol_AP = NULL) {
-  double profitAcum = 0;
-
-  HistorySelect(initDate_AP, finishDate_AP);
-  for(int i = 1; i <= HistoryDealsTotal(); i++) {
-    ulong ticket = HistoryDealGetTicket(i);
-    profitAcum += HistoryDealGetDouble(ticket, DEAL_PROFIT);
-  }
-  if(PositionSelect(symbol_AP == NULL ? _Symbol : symbol_AP)) {
-    profitAcum += PositionGetDouble(POSITION_PROFIT);
-  }
-
-  return profitAcum;
+  //--- closed deals of the period (any symbol) + floating result on the symbol (see DealMath.mqh)
+  return SimplifyHistoryProfit(initDate_AP, finishDate_AP) + SimplifyFloatingProfit(symbol_AP);
 }
 
 //+------------------------------------------------------------------+
@@ -51,7 +42,13 @@ double COperations :: AccumulatedProfit(datetime initDate_AP,
 int COperations :: NumberOfTrades (datetime initDate,
                                    datetime finishDate) {
   HistorySelect(initDate, finishDate);
-  return HistoryDealsTotal();
+  int total = HistoryDealsTotal(), trades = 0;
+  for(int i = 0; i < total; i++) {
+    ulong ticket = HistoryDealGetTicket(i);
+    if(ticket != 0 && SimplifyIsTradeDeal((ENUM_DEAL_TYPE)HistoryDealGetInteger(ticket, DEAL_TYPE)))
+      trades++;
+  }
+  return trades;
 }
 
 //+------------------------------------------------------------------+
@@ -61,9 +58,10 @@ ulong COperations :: PastOperationTicket(int shift) {
   uint dealsTotal;
   string today;
 
-  today = TimeToString(TimeLocal(), TIME_DATE);
+  //--- "today" is the trade server's day, not the PC clock's
+  today = TimeToString(TimeTradeServer(), TIME_DATE);
 
-  HistorySelect(StringToTime(today), TimeCurrent());
+  HistorySelect(StringToTime(today), TimeTradeServer());
   dealsTotal = HistoryDealsTotal();
   return HistoryDealGetTicket(dealsTotal - shift);
 }

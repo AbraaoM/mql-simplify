@@ -19,8 +19,8 @@ Shows a message if current time is out of defined limits.
 **Return**
 
 - **bool**
-  - true: Current local time in defined limits
-  - false: Current local time out of defined limits
+  - true: Current trade server time in defined limits
+  - false: Current trade server time out of defined limits
 
 
 
@@ -45,8 +45,8 @@ Receive a array of days to operate and return true if current day is in the arra
 **Return**
 
 - **bool**
-  - true: Current local day is in the array 
-  - false: Current local day in not in the array
+  - true: Current trade server day is in the array 
+  - false: Current trade server day in not in the array
 
 
 

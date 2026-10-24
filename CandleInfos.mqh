@@ -64,11 +64,15 @@ bool CCandleInfos :: IsCandleNegative (ENUM_TIMEFRAMES u_timeframe = PERIOD_CURR
 //|  Is new candle function                                          |
 //+------------------------------------------------------------------+
 bool CCandleInfos :: IsNewCandle(ENUM_TIMEFRAMES timeframe = 0) {
-  if(pastClose != iClose(NULL, timeframe, 1)) {
-    pastClose = iClose(NULL, timeframe, 1);
+  //--- compares the open time of the current bar (pastClose keeps that time):
+  //    two bars with the same close price are still two candles
+  double barTime = (double)iTime(NULL, timeframe, 0);
+  if(barTime == 0)
+    return false;
+  if(pastClose != barTime) {
+    pastClose = barTime;
     return true;
   }
-  pastClose = iClose(NULL, timeframe, 1);
   return false;
 }
 //+------------------------------------------------------------------+
