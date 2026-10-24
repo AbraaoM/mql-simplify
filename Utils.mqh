@@ -54,7 +54,7 @@ void CUtils :: ArrayShift(int ut_shift,
 }
 
 //+------------------------------------------------------------------+
-//|  Booolean Array verification function                            |
+//|  Boolean Array verification function                            |
 //+------------------------------------------------------------------+
 bool CUtils :: BooleanArray(bool& ut_array[]) {
   for(int i = 0; i < ArrayRange(ut_array, 0); i++)

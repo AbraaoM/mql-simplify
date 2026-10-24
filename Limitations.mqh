@@ -154,6 +154,9 @@ class CLimitations {
     int timeOnOperationLimitTarget,
         sumTimeOnOperation;
 
+    //--- no storage object: nothing accumulated (was an invalid pointer access)
+    if(CheckPointer(external_state) == POINTER_INVALID)
+      return false;
     sumTimeOnOperation = (int)StringToInteger(external_state.GetState("timeOperationAcumm"));
 
     timeOnOperationLimitTarget = timeManipulationService.StringTimeToInt(limitTime, HHMM);

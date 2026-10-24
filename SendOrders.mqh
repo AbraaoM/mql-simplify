@@ -22,6 +22,9 @@ class CSendOrders {
   CTrade             *trade_SO;
   CUtils             utilsService;
 
+  void               SetFilling();
+  bool               CanOpen(TRADE_TYPE type, double price);
+
  public:
                      CSendOrders(string so_symbol = NULL,
               long so_magicNumber = NULL,
@@ -99,6 +102,48 @@ CSendOrders :: ~CSendOrders() {
 
 
 //+------------------------------------------------------------------+
+//|  Filling mode: FOK as before when the symbol allows it, otherwise |
+//|  the mode the symbol supports (a fixed FOK is rejected on many    |
+//|  servers with "unsupported filling mode")                         |
+//+------------------------------------------------------------------+
+void CSendOrders :: SetFilling() {
+  string symbol = (m_symbol == NULL || m_symbol == "") ? _Symbol : m_symbol;
+  long modes = SymbolInfoInteger(symbol, SYMBOL_FILLING_MODE);
+  if((modes & SYMBOL_FILLING_FOK) == SYMBOL_FILLING_FOK)
+    trade_SO.SetTypeFilling(ORDER_FILLING_FOK);
+  else
+    trade_SO.SetTypeFillingBySymbol(symbol);
+}
+
+//+------------------------------------------------------------------+
+//|  Checks volume limits/step and free margin before a market order  |
+//|  (MQL5 Market validation, article 2555). Prints why and returns   |
+//|  false instead of sending an order the server would reject.       |
+//+------------------------------------------------------------------+
+bool CSendOrders :: CanOpen(TRADE_TYPE type, double price) {
+  string symbol = (m_symbol == NULL || m_symbol == "") ? _Symbol : m_symbol;
+  double vmin = SymbolInfoDouble(symbol, SYMBOL_VOLUME_MIN);
+  double vmax = SymbolInfoDouble(symbol, SYMBOL_VOLUME_MAX);
+  double step = SymbolInfoDouble(symbol, SYMBOL_VOLUME_STEP);
+  if(m_volume < vmin || m_volume > vmax ||
+      (step > 0 && MathAbs(MathRound(m_volume / step) * step - m_volume) > 1e-7)) {
+    Print(__FUNCTION__, ": invalid volume ", DoubleToString(m_volume, 2), " for ", symbol);
+    return false;
+  }
+  double margin = 0;
+  ENUM_ORDER_TYPE orderType = (type == BUY) ? ORDER_TYPE_BUY : ORDER_TYPE_SELL;
+  if(!OrderCalcMargin(orderType, symbol, m_volume, price, margin)) {
+    Print(__FUNCTION__, ": OrderCalcMargin failed, error ", GetLastError());
+    return false;
+  }
+  if(margin > AccountInfoDouble(ACCOUNT_MARGIN_FREE)) {
+    Print(__FUNCTION__, ": not enough money for ", DoubleToString(m_volume, 2), " ", symbol);
+    return false;
+  }
+  return true;
+}
+
+//+------------------------------------------------------------------+
 //|  Send orders at market, parameter points                         |
 //+------------------------------------------------------------------+
 void CSendOrders :: AtMarketPoints(bool& m_requirements[],
@@ -108,7 +153,7 @@ void CSendOrders :: AtMarketPoints(bool& m_requirements[],
       return;
 
   trade_SO.SetDeviationInPoints(INT_MAX);
-  trade_SO.SetTypeFilling(ORDER_FILLING_FOK);
+  SetFilling();
 
   double ask_SO,
          bid_SO;
@@ -117,6 +162,8 @@ void CSendOrders :: AtMarketPoints(bool& m_requirements[],
   bid_SO = NormalizeDouble(SymbolInfoDouble(m_symbol, SYMBOL_BID), _Digits);
 
   if(m_tradeType == SELL) {
+    if(!CanOpen(m_tradeType, bid_SO))
+      return;
     trade_SO.Sell(m_volume,
                   m_symbol,
                   bid_SO,
@@ -124,6 +171,8 @@ void CSendOrders :: AtMarketPoints(bool& m_requirements[],
                   (m_takeProfit == 0) ? 0 : bid_SO - (m_takeProfit * _Point));
   }
   if(m_tradeType == BUY) {
+    if(!CanOpen(m_tradeType, ask_SO))
+      return;
     trade_SO.Buy(m_volume,
                  m_symbol,
                  ask_SO,
@@ -142,7 +191,7 @@ bool CSendOrders :: AtMarketPrice(bool& m_requirements[],
       return false;
 
   trade_SO.SetDeviationInPoints(INT_MAX);
-  trade_SO.SetTypeFilling(ORDER_FILLING_FOK);
+  SetFilling();
 
   double ask_SO,
          bid_SO;
@@ -151,6 +200,8 @@ bool CSendOrders :: AtMarketPrice(bool& m_requirements[],
   bid_SO = NormalizeDouble(SymbolInfoDouble(m_symbol, SYMBOL_BID), _Digits);
 
   if(m_tradeType == SELL) {
+    if(!CanOpen(m_tradeType, bid_SO))
+      return false;
     trade_SO.Sell(m_volume,
                   m_symbol,
                   bid_SO,
@@ -158,6 +209,8 @@ bool CSendOrders :: AtMarketPrice(bool& m_requirements[],
                   m_takeProfit);
   }
   if(m_tradeType == BUY) {
+    if(!CanOpen(m_tradeType, ask_SO))
+      return false;
     trade_SO.Buy(m_volume,
                  m_symbol,
                  ask_SO,
@@ -242,7 +295,7 @@ bool CSendOrders :: LimitOrderPoints(bool& m_requirements[],
                                      double so_price) {
 
   trade_SO.SetDeviationInPoints((ulong)(_Point));
-  trade_SO.SetTypeFilling(ORDER_FILLING_FOK);
+  SetFilling();
 
   for(int i = 0; i < ArrayRange(m_requirements, 0); i++)
     if(m_requirements[i] == false)
@@ -309,7 +362,7 @@ void CSendOrders :: OnBidPoints(bool& m_requirements[],
       return;
 
   trade_SO.SetDeviationInPoints((ulong)(_Point));
-  trade_SO.SetTypeFilling(ORDER_FILLING_FOK);
+  SetFilling();
 
   double ask_SO,
          bid_SO;
@@ -318,6 +371,8 @@ void CSendOrders :: OnBidPoints(bool& m_requirements[],
   bid_SO = NormalizeDouble(SymbolInfoDouble(m_symbol, SYMBOL_BID), _Digits);
 
   if(m_tradeType == BUY) {
+    if(!CanOpen(m_tradeType, bid_SO))
+      return;
     trade_SO.Buy(m_volume,
                  m_symbol,
                  bid_SO,
@@ -325,6 +380,8 @@ void CSendOrders :: OnBidPoints(bool& m_requirements[],
                  (m_takeProfit == 0) ? 0 : bid_SO + (m_takeProfit * _Point));
   }
   if(m_tradeType == SELL) {
+    if(!CanOpen(m_tradeType, bid_SO))
+      return;
     trade_SO.Sell(m_volume,
                   m_symbol,
                   bid_SO,
@@ -344,7 +401,7 @@ void CSendOrders :: OnAskPoints(bool& m_requirements[],
       return;
 
   trade_SO.SetDeviationInPoints((ulong)(_Point));
-  trade_SO.SetTypeFilling(ORDER_FILLING_FOK);
+  SetFilling();
 
   double ask_SO,
          bid_SO;
@@ -352,6 +409,8 @@ void CSendOrders :: OnAskPoints(bool& m_requirements[],
   ask_SO = NormalizeDouble(SymbolInfoDouble(m_symbol, SYMBOL_ASK), _Digits);
   bid_SO = NormalizeDouble(SymbolInfoDouble(m_symbol, SYMBOL_BID), _Digits);
   if(m_tradeType == BUY) {
+    if(!CanOpen(m_tradeType, ask_SO))
+      return;
     trade_SO.Buy(m_volume,
                  m_symbol,
                  ask_SO,
@@ -359,6 +418,8 @@ void CSendOrders :: OnAskPoints(bool& m_requirements[],
                  (m_takeProfit == 0) ? 0 : ask_SO + (m_takeProfit * _Point));
   }
   if(m_tradeType == SELL) {
+    if(!CanOpen(m_tradeType, ask_SO))
+      return;
     trade_SO.Sell(m_volume,
                   m_symbol,
                   ask_SO,

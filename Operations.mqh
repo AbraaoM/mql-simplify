@@ -63,6 +63,9 @@ ulong COperations :: PastOperationTicket(int shift) {
 
   HistorySelect(StringToTime(today), TimeTradeServer());
   dealsTotal = HistoryDealsTotal();
+  //--- 0 (no deal) when shift is outside 1..dealsTotal (the uint index used to wrap around)
+  if(shift < 1 || (uint)shift > dealsTotal)
+    return 0;
   return HistoryDealGetTicket(dealsTotal - shift);
 }
 

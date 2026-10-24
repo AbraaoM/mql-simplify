@@ -547,8 +547,9 @@ void CDropdown ::  Close() {
   for(int i = 0; i < ArraySize(elements); i++) {
     elements[i].buttonPositionY = elements[i].buttonPositionY - i*elements[i].buttonHeight;
     elements[i].Destroy();
-    ChartRedraw();
   }
+  //--- one redraw after the loop (it was one per item)
+  ChartRedraw();
 }
 
 //+------------------------------------------------------------------+
