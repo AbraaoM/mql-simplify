@@ -16,6 +16,8 @@
 #include "../HistoryReader.mqh"
 #include "../HistoryMetrics.mqh"
 #include "../DealGroups.mqh"
+#include "../Regression.mqh"
+#include "../RiskSizing.mqh"
 
 class CNoopListener : public CDealListener {
  public:

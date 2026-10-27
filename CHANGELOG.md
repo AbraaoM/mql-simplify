@@ -5,6 +5,9 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 ## [Unreleased]
 
 ### Adicionado
+- `Regression.mqh`: regressão linear pura (inclinação, intercepto, valor na última barra, desvio-padrão dos resíduos, R², inclinação normalizada) e bandas do canal.
+- `RiskSizing.mqh`: lote por risco em dinheiro com piso no passo, teto no máximo e 0 abaixo do mínimo; distância mínima de stop (stops/freeze level); arredondamento ao tick.
+- Teste `tests/TestRegressionSizing.mq5`.
 - `DayClock.mqh` (`CDayClock`): dia de trading no horário do servidor, com hora de virada.
 - `HistoryReader.mqh` (`CHistoryReader`, `CDealListener`): leitura incremental do histórico, com limite de negócios e de tempo por chamada.
 - `HistoryMetrics.mqh` (`CDrawdown`, `CTradeStats`, `CPositionCosts`): drawdown, fator de lucro, expectativa, taxa de acerto e custos de entrada.
