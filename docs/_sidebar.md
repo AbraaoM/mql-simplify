@@ -10,5 +10,7 @@
 - [DealMath](DealMath.md)
 - [Regression](Regression.md)
 - [RiskSizing](RiskSizing.md)
+- [B3Futures](B3Futures.md)
+- [PositionMode](PositionMode.md)
 - [Messages](Messages.md)
 - [History (DayClock, HistoryReader, HistoryMetrics, DealGroups)](HistoryMetrics.md)

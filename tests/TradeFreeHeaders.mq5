@@ -18,6 +18,8 @@
 #include "../DealGroups.mqh"
 #include "../Regression.mqh"
 #include "../RiskSizing.mqh"
+#include "../B3Futures.mqh"
+#include "../PositionMode.mqh"
 
 class CNoopListener : public CDealListener {
  public:

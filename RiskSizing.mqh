@@ -89,4 +89,26 @@ double SimplifyRoundToTick(const double price, const double tickSize) {
   return MathRound(price / tickSize) * tickSize;
 }
 
+//+------------------------------------------------------------------+
+//|  Price distance in points -> money for a volume, from the symbol |
+//|  point, tick size and tick value (e.g. WIN: point 1, tick 5,     |
+//|  tick value 1.00 BRL -> 100 points = 20.00 BRL per contract).     |
+//+------------------------------------------------------------------+
+double SimplifyPointsToMoney(const double points, const double point, const double tickSize,
+                             const double tickValue, const double volume) {
+  if(point <= 0 || tickSize <= 0 || tickValue <= 0 || volume <= 0 || points < 0)
+    return 0;
+  return points * point / tickSize * tickValue * volume;
+}
+
+//+------------------------------------------------------------------+
+//|  Money for a volume -> price distance in points (inverse)        |
+//+------------------------------------------------------------------+
+double SimplifyMoneyToPoints(const double money, const double point, const double tickSize,
+                             const double tickValue, const double volume) {
+  if(point <= 0 || tickSize <= 0 || tickValue <= 0 || volume <= 0 || money < 0)
+    return 0;
+  return money / (tickValue * volume) * tickSize / point;
+}
+
 #endif
