@@ -8,5 +8,7 @@
 - [SymbolInfo](SymbolInfo.md)
 - [NewTypes](NewTypes.md)
 - [DealMath](DealMath.md)
+- [Regression](Regression.md)
+- [RiskSizing](RiskSizing.md)
 - [Messages](Messages.md)
 - [History (DayClock, HistoryReader, HistoryMetrics, DealGroups)](HistoryMetrics.md)

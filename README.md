@@ -65,6 +65,8 @@ Legenda: **TF** = *trade-free*, ou seja, pode ser usado em indicadores e não en
 | `HistoryReader.mqh` | `CHistoryReader`, `CDealListener` | ✓ | Leitura incremental do histórico, com limite de negócios e de milissegundos por chamada (não trava o thread do indicador). |
 | `HistoryMetrics.mqh` | `CDrawdown`, `CTradeStats`, `CPositionCosts` | ✓ | Drawdown pico-vale, fator de lucro, expectativa, taxa de acerto e custos de entrada por posição. |
 | `DealGroups.mqh` | `CDealGroups` | ✓ | Estatísticas agrupadas por magic, por nome de magic (`"1001=Trend;1002=Grid"`) ou por símbolo. |
+| `Regression.mqh` | `SimplifyLinReg`, `SimplifyLinRegLast`, `SimplifyLinRegUpper/Lower`, `SimplifyLinRegTrendScore` | ✓ | Regressão linear (mínimos quadrados) numa janela de preços: inclinação, valor na última barra, desvio-padrão dos resíduos (canal), R² e inclinação normalizada pela volatilidade. Funções puras. |
+| `RiskSizing.mqh` | `SimplifyLotForRisk`, `SimplifyFloorVolume`, `SimplifyLossPerLot`, `SimplifyMinStopDistance`, `SimplifyRoundToTick` | ✓ | Lote pelo dinheiro em risco e distância do stop, arredondado **para baixo** ao passo e limitado ao mínimo/máximo do símbolo; distância mínima de SL/TP (stops level e freeze level). Funções puras. |
 | `Messages.mqh` | `SimplifyMessageBox` | ✓ | `MessageBox` em EAs e scripts; `Alert` em indicadores, onde `MessageBox` é proibido. |
 | `Graphic.mqh` | `CHorizontalLine`, `CRetangle`, `CLabel`, `CEdit`, `CButton`, `CDropdown` | ✓ | Objetos de gráfico com criação, mudança de estado e destruição. |
 | `CandleInfos.mqh` | `CCandleInfos` | ✓ | Nova vela, tamanho e direção. |
@@ -153,6 +155,7 @@ O resultado esperado no log é `Result: 0 errors, 0 warnings`.
 | `TradeFreeHeaders.mq5` | indicador | Os headers *trade-free* compilam num indicador sem `Trade.mqh` e sem `MessageBox`. |
 | `TestDealGroups.mq5` | script | Parsing do mapa de magics, chaves e ordenação dos grupos. |
 | `TestHistory.mq5` | script | DayClock, HistoryReader e HistoryMetrics. |
+| `TestRegressionSizing.mq5` | script | Regressão (retas conhecidas, resíduos, janelas inválidas) e cálculo de lote (passo, mínimo, máximo, stop level). |
 | `TestReviewFixes.mq5` | script | Entradas inválidas que antes paravam o programa (fora do intervalo do array, ponteiro inválido). |
 
 Os scripts não precisam de conta. Rode-os no terminal (arraste o script para o gráfico). Cada um grava `MQL5\Files\mqlsimplify_*_results.txt`, cuja última linha é `RESULT PASS: N passed, 0 failed`.
