@@ -1,5 +1,9 @@
 # MQL Simplify
 
+<p align="center">
+  <img src="logo_simplify.jpg" alt="MQL Simplify Logo" width="500">
+</p>
+
 Biblioteca de classes e funções **MQL5** (MetaTrader 5) que simplifica tarefas comuns de EAs, indicadores e scripts: envio de ordens, posições, histórico de negócios, limites de risco, objetos gráficos, horários do servidor e validação de inputs.
 
 > **English summary** at the end of this file.
